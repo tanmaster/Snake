@@ -9,13 +9,17 @@ import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
 public class Main extends Application {
 
     Button button;
+    String a;
+    TextField textField;
 
     public static void main(String[] args) {
         launch(args);
@@ -27,12 +31,24 @@ public class Main extends Application {
         button = new Button();
         button.setText("hisss");
 
+
+        textField = new TextField();
+        textField.setVisible(true);
+        textField.getText();
+        textField.setOnAction(event -> {
+            a = textField.getText();
+                System.out.println(a);
+
+        });
+
+        AlertBox alertBox = new AlertBox();
         //using lambdas to handle events
-        button.setOnAction(event -> System.out.println("lol nice try taylor"));
+        //button.setOnAction(event -> System.out.println("lol nice try taylor"));
+        button.setOnAction(event ->  AlertBox.display("aa", "aa"));
+        button.setMinSize(50,50);
 
-
-        StackPane layout = new StackPane();
-        layout.getChildren().add(button);
+        VBox layout = new VBox(5);
+        layout.getChildren().addAll(textField, button);
 
         Scene scene = new Scene(layout, 300, 300);
         primaryStage.setScene(scene);
