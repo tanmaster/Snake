@@ -44,8 +44,8 @@ public class Main extends Application {
         AlertBox alertBox = new AlertBox();
         //using lambdas to handle events
         //button.setOnAction(event -> System.out.println("lol nice try taylor"));
-        button.setOnAction(event ->  AlertBox.display("aa", "aa"));
-        button.setMinSize(50,50);
+        button.setOnAction(event ->  AlertBox.display("Credits", "Snake By Tan"));
+        button.setMinSize(100,30);
 
         VBox layout = new VBox(5);
         layout.getChildren().addAll(textField, button);
