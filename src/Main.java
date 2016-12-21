@@ -14,9 +14,9 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    Button creditsButton, fieldSize;
-    int x, y;
-    TextField xField, yField;
+    private Button creditsButton, fieldSize;
+    private int x, y;
+    private TextField xField, yField;
 
     public static void main(String[] args) {
         launch(args);
@@ -37,17 +37,12 @@ public class Main extends Application {
 
         fieldSize = new Button("Set Size");
         fieldSize.setMinSize(50, 50);
-        fieldSize.setOnAction(event -> {
-            if (isNumeric(xField.getText()) && isNumeric(yField.getText())) {
-                x = Integer.valueOf(xField.getText());
-                y = Integer.valueOf(yField.getText());
-                System.out.println(x + " " + y);
-            }else System.out.println("Please enter a numerical value in both thext fields");
-        });
+
 
         AlertBox alertBox = new AlertBox();
         //using lambdas to handle events
         //creditsButton.setOnAction(event -> System.out.println("lol nice try taylor"));
+
         creditsButton.setOnAction(event -> AlertBox.display("Credits", "Snake By Tan\nThanks 4 playing"));
         creditsButton.setMinSize(100, 30);
         VBox layout = new VBox(10);
@@ -55,16 +50,28 @@ public class Main extends Application {
         layout.setAlignment(Pos.TOP_CENTER);
 
 
-
-        Scene scene = new Scene(layout, 300, 300);
+        Scene scene = new Scene(layout, x*10, y*10);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        fieldSize.setOnAction(event -> {
+            if (isNumeric(xField.getText()) && isNumeric(yField.getText())) {
+                x = Integer.valueOf(xField.getText());
+                y = Integer.valueOf(yField.getText());
+                System.out.println(x + " " + y);
+
+            } else System.out.println("Please enter a numerical value in both thext fields");
+        });
 
 
     }
 
+    private void setSize(int x, int y) {
 
-    public static boolean isNumeric(String str) {
+    }
+
+
+    private static boolean isNumeric(String str) {
         try {
             double d = Double.parseDouble(str);
         } catch (NumberFormatException nfe) {
