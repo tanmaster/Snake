@@ -34,7 +34,7 @@ class Board extends JPanel implements KeyListener {
 
     private JFrame frame;
     private JPanel panel;
-
+    private int points;
     private int widthHeight;
     private ArrayList<Field> map;
     private Snake snake;
@@ -55,6 +55,8 @@ class Board extends JPanel implements KeyListener {
         frame.addKeyListener(this);
         createMap(500, 500);
         snake = new Snake();
+        points = 0;
+
     }
 
     Board(int x, int y, int widthHeight) {
@@ -62,10 +64,14 @@ class Board extends JPanel implements KeyListener {
         this.x = x;
         this.y = y;
         this.widthHeight = widthHeight;
+
+
         frame.setSize(x + 7, y + 30);
         frame.setResizable(false);
         createMap(x, y);
-
+        food = new Field(0, 0);
+        food.setRandom();
+        food.setColor(Color.red);
     }
 
     private void createMap(int x, int y) {
@@ -79,14 +85,13 @@ class Board extends JPanel implements KeyListener {
     }
 
     boolean test() {
-        snake.grow();
         boolean a = snake.move();
         frame.repaint();
 
         return a;
     }
 
-    void end(){
+    void end() {
         this.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     }
 
@@ -115,6 +120,8 @@ class Board extends JPanel implements KeyListener {
                 g2d.setColor(snake.getColor());
                 g2d.fillRect(f.getX1() + 1, f.getY1() + 1, widthHeight - 1, widthHeight - 1);
             }
+            g2d.setColor(food.getColor());
+            g2d.fillRect(food.getX1() + 1, food.getY1() + 1, widthHeight - 1, widthHeight - 1);
             g2d.dispose();
 
 
@@ -201,25 +208,29 @@ class Board extends JPanel implements KeyListener {
 
             }
 
-            return check();
+            boolean flag;
+            if (check()) {
+                if (body.get(0).equals(food)) {
+                    grow();
 
+                    do {
+                        food.setRandom();
+                        flag = false;
+                        for (Field f : body) {
+                            if (f.equals(food)) {
+                                flag = true;
+                            }
+                        }
+                    } while (flag);
+
+                }
+                return true;
+            } else return false;
         }
 
         boolean check() {
             for (Field f : body) {
-                if (f.getX1() < 0) {
-                    f.setX1(x + f.getX1());
-                }
-                if (f.getY1() < 0) {
-                    f.setY1(y + f.getY1());
-                }
-                if (f.getX1() >= x) {
-                    f.setX1(0);
-                }
-                if (f.getY1() >= y) {
-                    f.setY1(0);
-                }
-
+                f.check();
 
             }
 
@@ -270,6 +281,30 @@ class Board extends JPanel implements KeyListener {
             this.color = color;
         }
 
+        public void setRandom() {
+
+            this.setX1(((int) (new Random().nextFloat() * (x / widthHeight))) * widthHeight);
+            this.setY1(((int) (new Random().nextFloat() * (y / widthHeight))) * widthHeight);
+
+        }
+
+        public void check() {
+            if (this.getX1() < 0) {
+                this.setX1(x + this.getX1());
+            }
+            if (this.getY1() < 0) {
+                this.setY1(y + this.getY1());
+            }
+            if (this.getX1() >= x) {
+                this.setX1(0);
+            }
+            if (this.getY1() >= y) {
+                this.setY1(0);
+            }
+
+        }
+
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -278,16 +313,24 @@ class Board extends JPanel implements KeyListener {
             Field field = (Field) o;
 
             if (x1 != field.x1) return false;
-            if (y1 != field.y1) return false;
-            return color != null ? color.equals(field.color) : field.color == null;
+            return y1 == field.y1;
+
         }
 
         @Override
         public int hashCode() {
             int result = x1;
             result = 31 * result + y1;
-            result = 31 * result + (color != null ? color.hashCode() : 0);
             return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Field{" +
+                    "x1=" + x1 +
+                    ", y1=" + y1 +
+                    ", color=" + color +
+                    '}';
         }
     }
 
@@ -313,7 +356,7 @@ class Board extends JPanel implements KeyListener {
         Board board = new Board(800, 800, 20);
         while (board.test()) {
             try {
-                Thread.sleep(100);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
