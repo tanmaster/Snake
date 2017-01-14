@@ -1,13 +1,35 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
  * Created by Tan on 13.01.2017.
  */
-class Board extends JPanel {
+class Board extends JPanel implements KeyListener {
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+            snake.setDirection(Direction.EAST);
+        else if (e.getKeyCode() == KeyEvent.VK_LEFT)
+            snake.setDirection(Direction.WEST);
+        else if (e.getKeyCode() == KeyEvent.VK_DOWN)
+            snake.setDirection(Direction.SOUTH);
+        else if (e.getKeyCode() == KeyEvent.VK_UP)
+            snake.setDirection(Direction.NORTH);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
 
     private JFrame frame;
     private JPanel panel;
@@ -29,6 +51,7 @@ class Board extends JPanel {
 
         panel = new TestPane();
         frame.add(panel);
+        frame.addKeyListener(this);
         createMap(500, 500);
         snake = new Snake();
     }
@@ -52,6 +75,11 @@ class Board extends JPanel {
                 map.add(new Field(i, j));
             }
         }
+    }
+
+    void test() {
+        snake.move();
+        frame.repaint();
     }
 
     public class TestPane extends JPanel {
@@ -86,6 +114,7 @@ class Board extends JPanel {
 
     }
 
+
     public class Snake {
 
         ArrayList<Field> body;
@@ -108,10 +137,12 @@ class Board extends JPanel {
             return color;
         }
 
+        public void setDirection(Direction direction) {
+            this.direction = direction;
+        }
 
         void grow() {
             Field oldHead = body.get(0);
-            // TODO: 14.01.2017 figure out which coordinate is which direction
             switch (direction) {
                 case EAST:
                     body.add(0, new Field(oldHead.getX1() + widthHeight, oldHead.getY1()));
@@ -134,7 +165,7 @@ class Board extends JPanel {
 
         }
 
-        void move() {
+        boolean move() {
             switch (direction) {
                 case EAST:
                     for (Field f : body) {
@@ -162,22 +193,23 @@ class Board extends JPanel {
             }
 
             check();
+
+            return true;
         }
 
         void check() {
             for (Field f : body) {
                 if (f.getX1() < 0) {
-
+                    f.setX1(x + f.getX1());
                 }
-                if (f.getY1() < 0){
-
+                if (f.getY1() < 0) {
+                    f.setY1(y + f.getY1());
                 }
-                if (f.getX1() > x){
-
+                if (f.getX1() >=x) {
+                    f.setX1(0);
                 }
-                if (f.getY1() > y){
-
-
+                if (f.getY1() >= y) {
+                    f.setY1(0);
                 }
 
             }
@@ -196,13 +228,6 @@ class Board extends JPanel {
             this.x1 = x1;
             this.y1 = y1;
             this.color = Color.blue;
-        }
-
-        Field(Field field) {
-
-            this.x1 = field.getX1();
-            this.y1 = field.getY1();
-            this.color = field.getColor();
         }
 
         public int getX1() {
@@ -236,8 +261,6 @@ class Board extends JPanel {
         SOUTH(2),
         WEST(3);
 
-
-        //field.setNeighbour(neighbours[i], Direction.values()[i]));
         private final int value;
 
         Direction(int val) {
@@ -251,6 +274,15 @@ class Board extends JPanel {
 
 
     public static void main(String[] args) {
-        new Board(800, 800, 20);
+        Board board = new Board(800, 800, 20);
+        while (true) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            board.test();
+        }
+
     }
 }
