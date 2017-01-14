@@ -18,14 +18,20 @@ class Board extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT && snake.getDirection() != Direction.WEST)
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && snake.getDirection() != Direction.WEST && !done) {
             snake.setDirection(Direction.EAST);
-        else if (e.getKeyCode() == KeyEvent.VK_LEFT && snake.getDirection() != Direction.EAST)
+            done = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_LEFT && snake.getDirection() != Direction.EAST && !done) {
             snake.setDirection(Direction.WEST);
-        else if (e.getKeyCode() == KeyEvent.VK_DOWN && snake.getDirection() != Direction.NORTH)
+            done = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_DOWN && snake.getDirection() != Direction.NORTH && !done) {
             snake.setDirection(Direction.SOUTH);
-        else if (e.getKeyCode() == KeyEvent.VK_UP && snake.getDirection() != Direction.SOUTH)
+            done = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_UP && snake.getDirection() != Direction.SOUTH && !done) {
             snake.setDirection(Direction.NORTH);
+            done = true;
+
+        }
     }
 
     @Override
@@ -41,6 +47,7 @@ class Board extends JPanel implements KeyListener {
     private Field food;
     private int x;
     private int y;
+    private boolean done;
 
 
     Board() {
@@ -56,6 +63,7 @@ class Board extends JPanel implements KeyListener {
         createMap(500, 500);
         snake = new Snake();
         points = 0;
+        done = false;
 
     }
 
@@ -87,7 +95,7 @@ class Board extends JPanel implements KeyListener {
     boolean test() {
         boolean a = snake.move();
         frame.repaint();
-
+        done = false;
         return a;
     }
 
@@ -356,7 +364,7 @@ class Board extends JPanel implements KeyListener {
         Board board = new Board(800, 800, 20);
         while (board.test()) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
