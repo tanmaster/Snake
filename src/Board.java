@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,13 +18,13 @@ class Board extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && snake.getDirection() != Direction.WEST)
             snake.setDirection(Direction.EAST);
-        else if (e.getKeyCode() == KeyEvent.VK_LEFT)
+        else if (e.getKeyCode() == KeyEvent.VK_LEFT && snake.getDirection() != Direction.EAST)
             snake.setDirection(Direction.WEST);
-        else if (e.getKeyCode() == KeyEvent.VK_DOWN)
+        else if (e.getKeyCode() == KeyEvent.VK_DOWN && snake.getDirection() != Direction.NORTH)
             snake.setDirection(Direction.SOUTH);
-        else if (e.getKeyCode() == KeyEvent.VK_UP)
+        else if (e.getKeyCode() == KeyEvent.VK_UP && snake.getDirection() != Direction.SOUTH)
             snake.setDirection(Direction.NORTH);
     }
 
@@ -77,9 +78,16 @@ class Board extends JPanel implements KeyListener {
         }
     }
 
-    void test() {
-        snake.move();
+    boolean test() {
+        snake.grow();
+        boolean a = snake.move();
         frame.repaint();
+
+        return a;
+    }
+
+    void end(){
+        this.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     }
 
     public class TestPane extends JPanel {
@@ -141,6 +149,10 @@ class Board extends JPanel implements KeyListener {
             this.direction = direction;
         }
 
+        public Direction getDirection() {
+            return direction;
+        }
+
         void grow() {
             Field oldHead = body.get(0);
             switch (direction) {
@@ -166,38 +178,34 @@ class Board extends JPanel implements KeyListener {
         }
 
         boolean move() {
+            Field head = body.get(0);
             switch (direction) {
                 case EAST:
-                    for (Field f : body) {
-                        f.setX1(f.getX1() + widthHeight);
-                    }
+                    body.add(0, new Field(head.getX1() + widthHeight, head.getY1()));
+                    body.remove(body.size() - 1);
                     break;
                 case NORTH:
-                    for (Field f : body) {
-                        f.setY1(f.getY1() - widthHeight);
-                    }
+                    body.add(0, new Field(head.getX1(), head.getY1() - widthHeight));
+                    body.remove(body.size() - 1);
                     break;
                 case SOUTH:
-                    for (Field f : body) {
-                        f.setY1(f.getY1() + widthHeight);
-                    }
+                    body.add(0, new Field(head.getX1(), head.getY1() + widthHeight));
+                    body.remove(body.size() - 1);
                     break;
                 case WEST:
-                    for (Field f : body) {
-                        f.setX1(f.getX1() - widthHeight);
-                    }
+                    body.add(0, new Field(head.getX1() - widthHeight, head.getY1()));
+                    body.remove(body.size() - 1);
                     break;
                 default:
                     break;
 
             }
 
-            check();
+            return check();
 
-            return true;
         }
 
-        void check() {
+        boolean check() {
             for (Field f : body) {
                 if (f.getX1() < 0) {
                     f.setX1(x + f.getX1());
@@ -205,14 +213,22 @@ class Board extends JPanel implements KeyListener {
                 if (f.getY1() < 0) {
                     f.setY1(y + f.getY1());
                 }
-                if (f.getX1() >=x) {
+                if (f.getX1() >= x) {
                     f.setX1(0);
                 }
                 if (f.getY1() >= y) {
                     f.setY1(0);
                 }
 
+
             }
+
+            for (int i = 1; i < body.size(); i++) {
+                if (body.get(0).equals(body.get(i))) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 
@@ -253,6 +269,26 @@ class Board extends JPanel implements KeyListener {
         public void setColor(Color color) {
             this.color = color;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Field field = (Field) o;
+
+            if (x1 != field.x1) return false;
+            if (y1 != field.y1) return false;
+            return color != null ? color.equals(field.color) : field.color == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = x1;
+            result = 31 * result + y1;
+            result = 31 * result + (color != null ? color.hashCode() : 0);
+            return result;
+        }
     }
 
     public enum Direction {
@@ -275,14 +311,16 @@ class Board extends JPanel implements KeyListener {
 
     public static void main(String[] args) {
         Board board = new Board(800, 800, 20);
-        while (true) {
+        while (board.test()) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            board.test();
         }
+
+//        board.end();
+
 
     }
 }
