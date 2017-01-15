@@ -21,6 +21,7 @@ class Board extends JPanel implements KeyListener {
     /**
      * Current player points.
      */
+    // TODO: 15.01.2017 maybe make this a snake variable
     private int points;
 
     /**
@@ -82,7 +83,7 @@ class Board extends JPanel implements KeyListener {
         this.widthHeight = widthHeight;
         snake = new Snake();
 
-        frame.setSize(x + 7, y + 30);
+        frame.setSize(x + 7, y+50);
         frame.setResizable(false);
         createMap(x, y);
         food = new Field(0, 0);
@@ -179,6 +180,8 @@ class Board extends JPanel implements KeyListener {
             }
             g2d.setColor(food.getColor());
             g2d.fillRect(food.getX1() + 1, food.getY1() + 1, widthHeight - 1, widthHeight - 1);
+            g2d.drawString("Punkte: " + points,0, y +20);
+
             g2d.dispose();
 
 
@@ -202,6 +205,8 @@ class Board extends JPanel implements KeyListener {
          * Color of the Snake.
          */
         Color color;
+
+
 
         Snake() {
             this.body = new ArrayList<>();
@@ -292,6 +297,7 @@ class Board extends JPanel implements KeyListener {
             boolean flag;
             if (check()) {
                 if (body.get(0).equals(food)) {
+                    points++;
                     grow();
 
                     do {
