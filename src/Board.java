@@ -9,21 +9,63 @@ import java.util.Random;
 /**
  * Created by Tan on 13.01.2017.
  */
+
+// TODO: 15.01.2017 2 Panels, one Board that is drawn only once, and one where the snake will be redrawn on top of the Board.
 class Board extends JPanel implements KeyListener {
 
+    /**
+     * Frame that will contain the panel that will be drawn in.
+     */
     private JFrame frame;
+
+    /**
+     * Panel that will be added to the Frame.
+     */
     private JPanel panel;
+
+    /**
+     * Current player points.
+     */
     private int points;
+
+    /**
+     * The height and width of a single Field of the Board.
+     */
     private int widthHeight;
+
+    /**
+     * Contains the Fields that will be drawn. todo: maybe this is not needed.
+     */
     private ArrayList<Field> map;
+
+    /**
+     * The snake that will slither around.
+     */
     private Snake snake;
+
+    /**
+     * The food that will be eaten by snake.
+     */
     private Field food;
+
+    /**
+     * Width of the Board in pixels.
+     */
     private int x;
+
+    /**
+     * Height of the Board in pixels.
+     */
     private int y;
+
+    /**
+     * Boolean that will be set to true after a KeyEvent happens so we will have to wait until the new Board is drawn
+     * before we listen to a new KeyEvent.
+     */
     private boolean done;
 
 
-    Board() {
+    private Board() {
         frame = new JFrame("Snek");
         frame.setVisible(true);
         frame.setSize(500, 500);
@@ -40,7 +82,7 @@ class Board extends JPanel implements KeyListener {
 
     }
 
-    Board(int x, int y, int widthHeight) {
+    private Board(int x, int y, int widthHeight) {
         this();
         this.x = x;
         this.y = y;
@@ -65,13 +107,20 @@ class Board extends JPanel implements KeyListener {
         }
     }
 
-    boolean test() {
+    /**
+     * This will run the program.
+     * @return True if snake was able to move, false else.
+     */
+    private boolean test() {
         boolean a = snake.move();
         frame.repaint();
         done = false;
         return a;
     }
 
+    /**
+     * A method to end and exit the program.
+     */
     void end() {
         this.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     }
@@ -105,7 +154,7 @@ class Board extends JPanel implements KeyListener {
 
     public class TestPane extends JPanel {
 
-        public TestPane() {
+        TestPane() {
         }
 
         @Override
@@ -113,6 +162,11 @@ class Board extends JPanel implements KeyListener {
             return new Dimension(200, 200);
         }
 
+        /**
+         * This will paint the Map, the Snake and the Food after every call once. This is not very efficient since the
+         * map is redrawn every time.
+         * @param g
+         */
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
@@ -139,8 +193,19 @@ class Board extends JPanel implements KeyListener {
 
     public class Snake {
 
+        /**
+         * The body of the Snake which consists of several Fields. The first element in this list is the head of the
+         * snake.
+         */
         ArrayList<Field> body;
+        /**
+         * A direction that is essentially an enum (NORTH, EAST, SOUTH, WEST)
+         */
         Direction direction;
+
+        /**
+         * Color of the Snake.
+         */
         Color color;
 
         Snake() {
@@ -151,22 +216,25 @@ class Board extends JPanel implements KeyListener {
             color = Color.green;
         }
 
-        public ArrayList<Field> getBody() {
+        ArrayList<Field> getBody() {
             return body;
         }
 
-        public Color getColor() {
+        Color getColor() {
             return color;
         }
 
-        public void setDirection(Direction direction) {
+        void setDirection(Direction direction) {
             this.direction = direction;
         }
 
-        public Direction getDirection() {
+        Direction getDirection() {
             return direction;
         }
 
+        /**
+         * This will make the snake grow. A Field will be added in front of the currents snake's head.
+         */
         void grow() {
             Field oldHead = body.get(0);
             switch (direction) {
@@ -191,6 +259,14 @@ class Board extends JPanel implements KeyListener {
 
         }
 
+        /**
+         * This will perform a move for the Snake. Essentially the Tail (last element of the Snake's body) will be
+         * removed and one Field will be added in front of the Snakes head. The position of the new head is defined by
+         * the direction the snake is currently headed to. If Snake runs into a food, grow() will be called and a new
+         * food will be spawned. It is also ensured that the newly spawned food didn't spawn on the Snake's body.
+         *
+         * @return True if Snake was able to move, false if it ran into itself.
+         */
         boolean move() {
             Field head = body.get(0);
             switch (direction) {
@@ -235,6 +311,10 @@ class Board extends JPanel implements KeyListener {
             } else return false;
         }
 
+        /**
+         * This performs a Field.check for every field of the body.
+         * @return False if Snake bit itself, true else.
+         */
         boolean check() {
             for (Field f : body) {
                 f.check();
@@ -263,38 +343,45 @@ class Board extends JPanel implements KeyListener {
             this.color = Color.blue;
         }
 
-        public int getX1() {
+        int getX1() {
             return x1;
         }
 
-        public int getY1() {
+        int getY1() {
             return y1;
         }
 
-        public void setX1(int x1) {
+        void setX1(int x1) {
             this.x1 = x1;
         }
 
-        public void setY1(int y1) {
+        void setY1(int y1) {
             this.y1 = y1;
         }
 
-        public Color getColor() {
+        Color getColor() {
             return color;
         }
 
-        public void setColor(Color color) {
+        void setColor(Color color) {
             this.color = color;
         }
 
-        public void setRandom() {
+        /**
+         * This will set the field to a new random position between (0,0) and (x,y).
+         */
+        void setRandom() {
 
             this.setX1(((int) (new Random().nextFloat() * (x / widthHeight))) * widthHeight);
             this.setY1(((int) (new Random().nextFloat() * (y / widthHeight))) * widthHeight);
 
         }
 
-        public void check() {
+        /**
+         * Checks if a field's x and y values are in bounds. If they are out of bounds (outside of map) the snake will
+         * re-enter the map from the other side.
+         */
+        void check() {
             if (this.getX1() < 0) {
                 this.setX1(x + this.getX1());
             }
