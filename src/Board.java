@@ -19,11 +19,6 @@ class Board extends JPanel implements KeyListener {
     private JFrame frame;
 
     /**
-     * Panel that will be added to the Frame.
-     */
-    private JPanel panel;
-
-    /**
      * Current player points.
      */
     private int points;
@@ -72,7 +67,10 @@ class Board extends JPanel implements KeyListener {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
-        panel = new TestPane();
+        /*
+      Panel that will be added to the Frame.
+     */
+        JPanel panel = new TestPane();
         frame.add(panel);
         frame.addKeyListener(this);
         createMap(500, 500);
