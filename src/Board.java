@@ -59,8 +59,7 @@ class Board extends JPanel implements KeyListener {
      */
     private boolean done;
 
-
-    private Board() {
+    private Board(int x, int y, int widthHeight) {
         frame = new JFrame("Snek");
         frame.setVisible(true);
         frame.setSize(500, 500);
@@ -74,18 +73,14 @@ class Board extends JPanel implements KeyListener {
         frame.add(panel);
         frame.addKeyListener(this);
         createMap(500, 500);
-        snake = new Snake();
+
         points = 0;
         done = false;
 
-    }
-
-    private Board(int x, int y, int widthHeight) {
-        this();
         this.x = x;
         this.y = y;
         this.widthHeight = widthHeight;
-
+        snake = new Snake();
 
         frame.setSize(x + 7, y + 30);
         frame.setResizable(false);
@@ -107,6 +102,7 @@ class Board extends JPanel implements KeyListener {
 
     /**
      * This will run the program.
+     *
      * @return True if snake was able to move, false else.
      */
     private boolean test() {
@@ -163,6 +159,7 @@ class Board extends JPanel implements KeyListener {
         /**
          * This will paint the Map, the Snake and the Food after every call once. This is not very efficient since the
          * map is redrawn every time.
+         *
          * @param g
          */
         protected void paintComponent(Graphics g) {
@@ -208,7 +205,10 @@ class Board extends JPanel implements KeyListener {
 
         Snake() {
             this.body = new ArrayList<>();
-            this.body.add(new Field(0, 0));
+            Field start = new Field(0,0);
+            start.setRandom();
+            this.body.add(start);
+            System.out.println(this.body.get(0));
             direction = Direction.SOUTH;
 
             color = Color.green;
@@ -311,6 +311,7 @@ class Board extends JPanel implements KeyListener {
 
         /**
          * This performs a Field.check for every field of the body.
+         *
          * @return False if Snake bit itself, true else.
          */
         boolean check() {
