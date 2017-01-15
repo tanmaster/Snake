@@ -64,7 +64,7 @@ class Board extends JPanel implements KeyListener {
         frame = new JFrame("Snek");
         frame.setVisible(true);
         frame.setSize(500, 500);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        //frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
         /*
@@ -83,7 +83,7 @@ class Board extends JPanel implements KeyListener {
         this.widthHeight = widthHeight;
         snake = new Snake();
 
-        frame.setSize(x + 7, y+50);
+        frame.setSize(x + 7, y + 50);
         frame.setResizable(false);
         createMap(x, y);
         food = new Field(0, 0);
@@ -180,7 +180,7 @@ class Board extends JPanel implements KeyListener {
             }
             g2d.setColor(food.getColor());
             g2d.fillRect(food.getX1() + 1, food.getY1() + 1, widthHeight - 1, widthHeight - 1);
-            g2d.drawString("Punkte: " + points,0, y +20);
+            g2d.drawString("Punkte: " + points, 0, y + 20);
 
             g2d.dispose();
 
@@ -207,10 +207,9 @@ class Board extends JPanel implements KeyListener {
         Color color;
 
 
-
         Snake() {
             this.body = new ArrayList<>();
-            Field start = new Field(0,0);
+            Field start = new Field(0, 0);
             start.setRandom();
             this.body.add(start);
             System.out.println(this.body.get(0));
@@ -451,16 +450,20 @@ class Board extends JPanel implements KeyListener {
 
 
     public static void main(String[] args) {
-        Board board = new Board(800, 800, 20);
-        while (board.test()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
 
-//        board.end();
+        while (true) {
+            Board board = new Board(800, 800, 20);
+            while (board.test()) {
+                try {
+                    Thread.sleep(30);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            board.end();
+
+        }
 
 
     }
