@@ -11,33 +11,6 @@ import java.util.Random;
  */
 class Board extends JPanel implements KeyListener {
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT && snake.getDirection() != Direction.WEST && !done) {
-            snake.setDirection(Direction.EAST);
-            done = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_LEFT && snake.getDirection() != Direction.EAST && !done) {
-            snake.setDirection(Direction.WEST);
-            done = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_DOWN && snake.getDirection() != Direction.NORTH && !done) {
-            snake.setDirection(Direction.SOUTH);
-            done = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_UP && snake.getDirection() != Direction.SOUTH && !done) {
-            snake.setDirection(Direction.NORTH);
-            done = true;
-
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
-
     private JFrame frame;
     private JPanel panel;
     private int points;
@@ -103,6 +76,33 @@ class Board extends JPanel implements KeyListener {
         this.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && snake.getDirection() != Direction.WEST && !done) {
+            snake.setDirection(Direction.EAST);
+            done = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_LEFT && snake.getDirection() != Direction.EAST && !done) {
+            snake.setDirection(Direction.WEST);
+            done = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_DOWN && snake.getDirection() != Direction.NORTH && !done) {
+            snake.setDirection(Direction.SOUTH);
+            done = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_UP && snake.getDirection() != Direction.SOUTH && !done) {
+            snake.setDirection(Direction.NORTH);
+            done = true;
+
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
     public class TestPane extends JPanel {
 
         public TestPane() {
@@ -136,7 +136,6 @@ class Board extends JPanel implements KeyListener {
         }
 
     }
-
 
     public class Snake {
 
@@ -250,7 +249,6 @@ class Board extends JPanel implements KeyListener {
             return true;
         }
     }
-
 
     public class Field {
 
