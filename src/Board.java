@@ -70,6 +70,8 @@ class Board extends JPanel implements KeyListener {
         /*
       Panel that will be added to the Frame.
      */
+        JPanel background = new JPanel();
+
         JPanel panel = new TestPane();
         frame.add(panel);
         frame.addKeyListener(this);
@@ -116,7 +118,7 @@ class Board extends JPanel implements KeyListener {
     /**
      * A method to end and exit the program.
      */
-    void end() {
+    private void end() {
         this.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     }
 
@@ -147,7 +149,7 @@ class Board extends JPanel implements KeyListener {
     public void keyReleased(KeyEvent e) {
     }
 
-    public class TestPane extends JPanel {
+    private class TestPane extends JPanel {
 
         TestPane() {
         }
@@ -168,12 +170,12 @@ class Board extends JPanel implements KeyListener {
 
             Graphics2D g2d = (Graphics2D) g.create();
 
-
+/*
             for (Field f : map) {
                 g2d.setColor(f.getColor());
                 g2d.drawRect(f.getX1(), f.getY1(), widthHeight, widthHeight);
             }
-
+*/
             for (Field f : snake.getBody()) {
                 g2d.setColor(snake.getColor());
                 g2d.fillRect(f.getX1() + 1, f.getY1() + 1, widthHeight - 1, widthHeight - 1);
@@ -189,7 +191,7 @@ class Board extends JPanel implements KeyListener {
 
     }
 
-    public class Snake {
+    private class Snake {
 
         /**
          * The body of the Snake which consists of several Fields. The first element in this list is the head of the
@@ -334,7 +336,7 @@ class Board extends JPanel implements KeyListener {
         }
     }
 
-    public class Field {
+    private class Field {
 
         private int x1;
         private int y1;
@@ -431,7 +433,7 @@ class Board extends JPanel implements KeyListener {
         }
     }
 
-    public enum Direction {
+    private enum Direction {
         NORTH(0),
         EAST(1),
         SOUTH(2),
