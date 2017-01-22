@@ -9,6 +9,7 @@ import java.util.Random;
 /**
  * Created by Tan on 13.01.2017.
  */
+// TODO: 22.01.17 improve this :^)
 class Board extends JPanel implements KeyListener {
 
     /**
