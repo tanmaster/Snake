@@ -170,6 +170,7 @@ class Board extends JPanel implements KeyListener {
 
             Graphics2D g2d = (Graphics2D) g.create();
 
+            //draws the map
 /*
             for (Field f : map) {
                 g2d.setColor(f.getColor());
