@@ -9,8 +9,6 @@ import java.util.Random;
 /**
  * Created by Tan on 13.01.2017.
  */
-
-// TODO: 15.01.2017 2 Panels, one Board that is drawn only once, and one where the snake will be redrawn on top of the Board.
 class Board extends JPanel implements KeyListener {
 
     /**
@@ -21,18 +19,12 @@ class Board extends JPanel implements KeyListener {
     /**
      * Current player points.
      */
-    // TODO: 15.01.2017 maybe make this a snake variable
     private int points;
 
     /**
      * The height and width of a single Field of the Board.
      */
     private int widthHeight;
-
-    /**
-     * Contains the Fields that will be drawn. todo: maybe this is not needed.
-     */
-    private ArrayList<Field> map;
 
     /**
      * The snake that will slither around.
@@ -60,55 +52,36 @@ class Board extends JPanel implements KeyListener {
      */
     private boolean done;
 
+
     private Board(int x, int y, int widthHeight) {
         frame = new JFrame("Snek");
         frame.setVisible(true);
         frame.setSize(500, 500);
-        //frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-
-        /*
-      Panel that will be added to the Frame.
-     */
-        JPanel background = new JPanel();
-
-        JPanel panel = new TestPane();
-        frame.add(panel);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setSize(x + 7, y + 50);
+        frame.setResizable(false);
+        frame.add(this);
         frame.addKeyListener(this);
-        createMap(500, 500);
-
-        points = 0;
-        done = false;
 
         this.x = x;
         this.y = y;
         this.widthHeight = widthHeight;
-        snake = new Snake();
 
-        frame.setSize(x + 7, y + 50);
-        frame.setResizable(false);
-        createMap(x, y);
+        points = 0;
+        done = false;
+        snake = new Snake();
         food = new Field(0, 0);
         food.setRandom();
         food.setColor(Color.red);
     }
 
-    private void createMap(int x, int y) {
-        this.map = new ArrayList<>();
-
-        for (int i = 0; i < x; i += 20) {
-            for (int j = 0; j < y; j += 20) {
-                map.add(new Field(i, j));
-            }
-        }
-    }
 
     /**
      * This will run the program.
      *
      * @return True if snake was able to move, false else.
      */
-    private boolean test() {
+    private boolean step() {
         boolean a = snake.move();
         frame.repaint();
         done = false;
@@ -149,48 +122,25 @@ class Board extends JPanel implements KeyListener {
     public void keyReleased(KeyEvent e) {
     }
 
-    private class TestPane extends JPanel {
 
-        TestPane() {
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2d = (Graphics2D) g.create();
+
+        for (Field f : snake.getBody()) {
+            g2d.setColor(snake.getColor());
+            g2d.fillRect(f.getX1() + 1, f.getY1() + 1, widthHeight - 1, widthHeight - 1);
         }
+        g2d.setColor(food.getColor());
+        g2d.fillRect(food.getX1() + 1, food.getY1() + 1, widthHeight - 1, widthHeight - 1);
+        g2d.drawString("Punkte: " + points, 0, y + 20);
 
-        @Override
-        public Dimension getPreferredSize() {
-            return new Dimension(200, 200);
-        }
+        g2d.dispose();
 
-        /**
-         * This will paint the Map, the Snake and the Food after every call once. This is not very efficient since the
-         * map is redrawn every time.
-         *
-         * @param g
-         */
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            Graphics2D g2d = (Graphics2D) g.create();
-
-            //draws the map
-/*
-            for (Field f : map) {
-                g2d.setColor(f.getColor());
-                g2d.drawRect(f.getX1(), f.getY1(), widthHeight, widthHeight);
-            }
-*/
-            for (Field f : snake.getBody()) {
-                g2d.setColor(snake.getColor());
-                g2d.fillRect(f.getX1() + 1, f.getY1() + 1, widthHeight - 1, widthHeight - 1);
-            }
-            g2d.setColor(food.getColor());
-            g2d.fillRect(food.getX1() + 1, food.getY1() + 1, widthHeight - 1, widthHeight - 1);
-            g2d.drawString("Punkte: " + points, 0, y + 20);
-
-            g2d.dispose();
-
-
-        }
 
     }
+
 
     private class Snake {
 
@@ -456,9 +406,9 @@ class Board extends JPanel implements KeyListener {
 
         while (true) {
             Board board = new Board(800, 800, 20);
-            while (board.test()) {
+            while (board.step()) {
                 try {
-                    Thread.sleep(30);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
