@@ -395,10 +395,6 @@ class Board extends JPanel implements KeyListener {
         Direction(int val) {
             this.value = val;
         }
-
-        public int getValue() {
-            return value;
-        }
     }
 
 
