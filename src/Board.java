@@ -28,12 +28,12 @@ class Board extends JPanel implements KeyListener {
     private int widthHeight;
 
     /**
-     * The snake that will slither around.
+     * The snek that will slither around.
      */
-    private Snake snake;
+    private snek snek;
 
     /**
-     * The food that will be eaten by snake.
+     * The food that will be eaten by snek.
      */
     private Field food;
 
@@ -70,7 +70,7 @@ class Board extends JPanel implements KeyListener {
 
         points = 0;
         done = false;
-        snake = new Snake();
+        snek = new snek();
         food = new Field(0, 0);
         food.setRandom();
         food.setColor(Color.red);
@@ -80,10 +80,10 @@ class Board extends JPanel implements KeyListener {
     /**
      * This will run the program.
      *
-     * @return True if snake was able to move, false else.
+     * @return True if snek was able to move, false else.
      */
     private boolean step() {
-        boolean a = snake.move();
+        boolean a = snek.move();
         frame.repaint();
         done = false;
         return a;
@@ -103,17 +103,17 @@ class Board extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT && snake.getDirection() != Direction.WEST && !done) {
-            snake.setDirection(Direction.EAST);
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && snek.getDirection() != Direction.WEST && !done) {
+            snek.setDirection(Direction.EAST);
             done = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_LEFT && snake.getDirection() != Direction.EAST && !done) {
-            snake.setDirection(Direction.WEST);
+        } else if (e.getKeyCode() == KeyEvent.VK_LEFT && snek.getDirection() != Direction.EAST && !done) {
+            snek.setDirection(Direction.WEST);
             done = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_DOWN && snake.getDirection() != Direction.NORTH && !done) {
-            snake.setDirection(Direction.SOUTH);
+        } else if (e.getKeyCode() == KeyEvent.VK_DOWN && snek.getDirection() != Direction.NORTH && !done) {
+            snek.setDirection(Direction.SOUTH);
             done = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_UP && snake.getDirection() != Direction.SOUTH && !done) {
-            snake.setDirection(Direction.NORTH);
+        } else if (e.getKeyCode() == KeyEvent.VK_UP && snek.getDirection() != Direction.SOUTH && !done) {
+            snek.setDirection(Direction.NORTH);
             done = true;
 
         }
@@ -129,8 +129,8 @@ class Board extends JPanel implements KeyListener {
 
         Graphics2D g2d = (Graphics2D) g.create();
 
-        for (Field f : snake.getBody()) {
-            g2d.setColor(snake.getColor());
+        for (Field f : snek.getBody()) {
+            g2d.setColor(snek.getColor());
             g2d.fillRect(f.getX1() + 1, f.getY1() + 1, widthHeight - 1, widthHeight - 1);
         }
         g2d.setColor(food.getColor());
@@ -143,11 +143,11 @@ class Board extends JPanel implements KeyListener {
     }
 
 
-    private class Snake {
+    private class snek {
 
         /**
-         * The body of the Snake which consists of several Fields. The first element in this list is the head of the
-         * snake.
+         * The body of the snek which consists of several Fields. The first element in this list is the head of the
+         * snek.
          */
         ArrayList<Field> body;
         /**
@@ -156,12 +156,12 @@ class Board extends JPanel implements KeyListener {
         Direction direction;
 
         /**
-         * Color of the Snake.
+         * Color of the snek.
          */
         Color color;
 
 
-        Snake() {
+        snek() {
             this.body = new ArrayList<>();
             Field start = new Field(0, 0);
             start.setRandom();
@@ -189,7 +189,7 @@ class Board extends JPanel implements KeyListener {
         }
 
         /**
-         * This will make the snake grow. A Field will be added in front of the currents snake's head.
+         * This will make the snek grow. A Field will be added in front of the currents snek's head.
          */
         void grow() {
             Field oldHead = body.get(0);
@@ -216,12 +216,12 @@ class Board extends JPanel implements KeyListener {
         }
 
         /**
-         * This will perform a move for the Snake. Essentially the Tail (last element of the Snake's body) will be
+         * This will perform a move for the snek. Essentially the Tail (last element of the snek's body) will be
          * removed and one Field will be added in front of the Snakes head. The position of the new head is defined by
-         * the direction the snake is currently headed to. If Snake runs into a food, grow() will be called and a new
-         * food will be spawned. It is also ensured that the newly spawned food didn't spawn on the Snake's body.
+         * the direction the snek is currently headed to. If snek runs into a food, grow() will be called and a new
+         * food will be spawned. It is also ensured that the newly spawned food didn't spawn on the snek's body.
          *
-         * @return True if Snake was able to move, false if it ran into itself.
+         * @return True if snek was able to move, false if it ran into itself.
          */
         boolean move() {
             Field head = body.get(0);
@@ -271,7 +271,7 @@ class Board extends JPanel implements KeyListener {
         /**
          * This performs a Field.check for every field of the body.
          *
-         * @return False if Snake bit itself, true else.
+         * @return False if snek bit itself, true else.
          */
         boolean check() {
             for (Field f : body) {
@@ -336,7 +336,7 @@ class Board extends JPanel implements KeyListener {
         }
 
         /**
-         * Checks if a field's x and y values are in bounds. If they are out of bounds (outside of map) the snake will
+         * Checks if a field's x and y values are in bounds. If they are out of bounds (outside of map) the snek will
          * re-enter the map from the other side.
          */
         void check() {
