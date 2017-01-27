@@ -10,7 +10,7 @@ import java.util.Random;
  * Created by Tan on 13.01.2017.
  */
 // TODO: 22.01.17 improve this :^)
-class Board extends JPanel implements KeyListener {
+public class Board extends JPanel implements KeyListener {
 
     /**
      * Frame that will contain the panel that will be drawn in.
@@ -55,7 +55,7 @@ class Board extends JPanel implements KeyListener {
 
 
     private Board(int x, int y, int widthHeight) {
-        frame = new JFrame("Snek");
+        frame = new JFrame("snek");
         frame.setVisible(true);
         frame.setSize(500, 500);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -150,6 +150,7 @@ class Board extends JPanel implements KeyListener {
          * snek.
          */
         ArrayList<Field> body;
+
         /**
          * A direction that is essentially an enum (NORTH, EAST, SOUTH, WEST)
          */
@@ -398,9 +399,12 @@ class Board extends JPanel implements KeyListener {
         }
     }
 
+    static {
+        //this will run immediately after first call of a Board Object
+        System.out.println("aaa");
+    }
 
     public static void main(String[] args) {
-
         while (true) {
             Board board = new Board(800, 800, 20);
             while (board.step()) {
